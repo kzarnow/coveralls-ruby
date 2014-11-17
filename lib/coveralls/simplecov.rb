@@ -68,9 +68,14 @@ module Coveralls
         #   puts "  => #{f[:name]}"
         # end
 
-        # Post to Coveralls.
-        API.post_json "jobs", {:source_files => source_files, :test_framework => result.command_name.downcase, :run_at => result.created_at}
-        Coveralls::Output.puts output_message result
+        # Post to hardcover.
+        if ENV['JENKINS_URL']
+          service_job_id = "#{ENV['JOB_NAME']}/#{ENV['BUILD_NUMBER']}"
+          API.post_json "jobs", {:source_files => source_files, :service_job_id => service_job_id}
+          Coveralls::Output.puts output_message result
+        else
+          Coveralls::Output.puts "[Hardcover] Other services than Jenkins are not yet supported."
+        end
 
         true
 
