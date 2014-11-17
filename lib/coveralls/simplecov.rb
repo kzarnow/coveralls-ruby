@@ -71,7 +71,10 @@ module Coveralls
         # Post to hardcover.
         if ENV['JENKINS_URL']
           service_job_id = "#{ENV['JOB_NAME']}/#{ENV['BUILD_NUMBER']}"
-          API.post_json "jobs", {:source_files => source_files, :service_job_id => service_job_id}
+          API.post_json "jobs", {:source_files => source_files,
+                                 :service_job_id => service_job_id,
+                                 :service_name => "jenkins-ci",
+                                 :repo_token => ENV["HARDCOVER_REPO_TOKEN"]}
           Coveralls::Output.puts output_message result
         else
           Coveralls::Output.puts "[Hardcover] Other services than Jenkins are not yet supported."
